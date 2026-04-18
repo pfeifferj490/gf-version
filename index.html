@@ -24,6 +24,7 @@
             <button class="nav-link" data-target="quiz-screen">Short Quiz</button>
             <button class="nav-link" data-target="results-screen">Results</button>
             <button class="nav-link" data-target="fullquiz-screen">Full Quiz</button>
+            <button class="nav-link" data-target="test-screen">Test</button>
         </nav>
     </div>
   <!--Home PAGE-->
@@ -92,7 +93,25 @@
             </div>
         </div>
     </div>
-
+    <!--Test Page-->
+    <div id='test-screen' class="page" style="display:none">test
+        <div id='test-container'>
+            <div class="test-progress-container">
+                <div id="test-progress-fill"></div>
+            </div>
+            <div id="test-question-screen">
+                <div id="test-question-text">Question loads here...</div>
+                <div id="test-options" class="test-options-grid"></div>
+                <div id="feedback"></div>
+                <button id="action-btn" onclick="submitAnswer()">Submit</button>
+            </div>
+        </div>
+        <div id="test-results-area" style="display: none">
+                <div id="test-results-title"></div>
+                <div id="test-results-text"></div>
+        </div>
+        <div id="summary-area" style="display: none"></div>
+    </div>
 
     <script src="script.js"></script>
 </body>
