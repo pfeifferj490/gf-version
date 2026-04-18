@@ -233,4 +233,198 @@ function shuffleArray(array){
 }
 loadQuestion()
 
+
+// test //
+
+const triviaBank = [
+    {
+        question: "How many hours are in a day?",
+        options: ["6","24","18","12"],
+        correctIndex: 1,
+        explanation: "There are 24 hours in a day.",
+    },
+    {
+        question: "Which country has a white flag?",
+        options: ["Spain","China","Africa","Japan"],
+        correctIndex: 3,
+        explanation: "Japan has a white flag with a red circle.",
+    }
+]
+
+let selectedOption = null;
+let score = 0;
+let quizHistory = [];
+let currentShuffledOptions = []
+function renderQuestion() {
+    const questionArea = document.getElementById('test-question-text');
+    const currentTestItem = triviaBank[currentIndex];
+    currentShuffledOptions = currentTestItem.noShuffle
+        ? currentTestItem.options
+        :shuffleArray([...currentTestItem.options]);
+    const triviaQuestion = currentTestItem.question;
+    questionArea.innerText = `${triviaQuestion}`;
+    renderOptions();
+}
+function renderOptions() {
+    const optionsContainer = document.getElementById('test-options');
+    optionsContainer.innerHTML = "";
+    const currentTestItem = triviaBank[currentIndex];
+    currentShuffledOptions.forEach((option) => {
+        const trueID = currentTestItem.options.indexOf(option);
+        const btn = document.createElement('button');
+        btn.innerText = option;
+        btn.className = "test-option-btn";
+
+        if(selectedOption === trueID) {
+            btn.classList.add('selected-highlight');
+        }
+
+        btn.onclick = () => {
+            selectedOption = trueID;
+            renderOptions();
+        };
+        optionsContainer.appendChild(btn);
+    });
+}
+
+
+function submitAnswer() {
+    const currentTestItem = triviaBank[currentIndex];
+    if(selectedOption === null) return alert("Please pick an answer!");
+
+    const optionsContainer = document.getElementById('test-options');
+    optionsContainer.classList.add('options-locked');
+    const isCorrect = (selectedOption === currentTestItem.correctIndex);
+
+    displayFeedback(isCorrect, currentTestItem.explanation);
+
+    quizHistory.push({
+        questionText: currentTestItem.question,
+        options: currentTestItem.options,
+        userChoice: selectedOption,
+        correctChoice: currentTestItem.correctIndex,
+        isCorrect: selectedOption === currentTestItem.correctIndex,
+        explanation: currentTestItem.explanation
+    });
+
+    const actionBtn = document.getElementById('action-btn');
+    if (currentIndex === triviaBank.length - 1){
+        actionBtn.innerText = "Finish & See Summary";
+    } else {
+        actionBtn.innerText = "Next Question";
+    }
+    actionBtn.onclick = nextQuestion;
+}
+function displayFeedback(isCorrect, explanation) {
+    const feedbackArea = document.getElementById('test-results-area');
+    feedbackArea.style.display = "block";
+    if (isCorrect) {
+        feedbackArea.innerHTML = `<div style="color: green;">Correct!</div>`;
+        score ++;
+    } else {
+        feedbackArea.innerHTML = `<div style="color:red;">Incorrect</div>`;
+    }
+    feedbackArea.innerHTML += `<div>${explanation}</div>`
+}
+function nextQuestion() {
+    currentIndex++;
+    selectedOption = null;
+
+    const optionsContainer = document.getElementById('test-options');
+    optionsContainer.classList.remove('options-locked');
+
+    if (currentIndex < triviaBank.length) {
+        document.getElementById('test-results-area').style.display = "none";
+        document.getElementById('action-btn').innerText = "submit";
+        document.getElementById('action-btn').onclick = submitAnswer;
+        renderQuestion();
+    } else {
+        showSummary();
+    }
+}
+function showSummary() {
+    document.getElementById('test-container').style.display = "none";
+    document.getElementById('test-results-area').style.display = "none";
+    const summaryContainer = document.getElementById('summary-area');
+    summaryContainer.style.display = "block";
+    summaryContainer.innerHTML = '<h2>Quiz Complete!</h2>';
+    quizHistory.forEach((item, index) => {
+        const resultIcon = item.isCorrect ? "✅Correct" : "❌Incorrect";
+        summaryContainer.innerHTML += `
+            <div class="summary-item" onclick="reviewQuestion(${index})">
+                Question ${index + 1}: ${resultIcon} <strong>(Click to Review)</strong>
+            </div>
+        `;
+    });
+    summaryContainer.innerHTML += `
+    <button id="restart-btn" class="action-btn" onclick="restartQuiz()" style="margin-top: 20px;">
+        Restart Quiz
+     </button>`;
+}
+function reviewQuestion(historyIndex) {
+    const data = quizHistory[historyIndex];
+    const optionsContainer = document.getElementById('test-options');
+    document.getElementById('test-question-text').innerText = `Review: ${data.questionText}`;
+    optionsContainer.innerHTML = "";
+    
+    data.options.forEach((option, index) => {
+        const btn = document.createElement('button');
+        btn.innerText = option;
+        btn.className = "test-option-btn";
+        btn.disabled = true;
+
+        if (index === data.correctChoice) {
+            btn.classList.add('correct-highlight');
+        }
+        if (index === data.userChoice && !data.isCorrect) {
+            btn.classList.add('wrong-highlight');
+        }
+        optionsContainer.appendChild(btn);
+    });
+    const feedbackArea = document.getElementById('feedback');
+    feedbackArea.style.display = "block";
+    feedbackArea.innerHTML = `<strong>Explanation:</strong> ${data.explanation}`;
+    
+    const actionBtn = document.getElementById('action-btn');
+    actionBtn.innerText = "Back to Summary";
+    actionBtn.onclick = () => {
+        showView('summary');
+    };
+    showView('quiz');
+}
+
+function restartQuiz(){
+    currentIndex = 0;
+    selectedOption = null;
+    quizHistory = [];
+    
+    const actionBtn = document.getElementById('action-btn');
+    actionBtn.innerText = "Submit";
+    actionBtn.onclick = submitAnswer;
+    
+    document.getElementById('feedback').style.display = "none";
+    document.getElementById('feedback').innerHTML = "";
+    document.getElementById('test-options').classList.remove('options-locked');
+    showView('quiz');
+    renderQuestion();
+}
+
+function showView(viewName) {
+    const quizContainer = document.getElementById('test-container');
+    const summaryArea = document.getElementById('summary-area');
+    const feedbackArea = document.getElementById('feedback');
+
+    if (viewName === 'quiz') {
+        quizContainer.style.display = "block";
+        summaryArea.style.display = "none";
+    } else if (viewName === 'summary') {
+        quizContainer.style.display = "none";
+        summaryArea.style.display = "block";
+        feedbackArea.style.display = "none";
+    }
+}
+renderQuestion();
+
+
+
 console.log('js setup complete');
