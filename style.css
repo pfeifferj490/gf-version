@@ -158,9 +158,14 @@ body {
     background-color: #ebf5fb;
 }
 .test-option-btn{
+    padding: 5px 10px;
+    font-size: 1.2rem;
+    min-width: 50px;
+    font-weight: 500;
     border: 2px solid rgb(156, 156, 156);
     background-color: #ebf5fb;
     border-radius: 12px;
+    margin: 5px 1px;
 }
 .correct-highlight {
     border: 3px solid green !important;
