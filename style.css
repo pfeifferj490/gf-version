@@ -186,3 +186,20 @@ body {
     pointer-events: none;
     opacity: 0.8;
 }
+#test-screen {
+    margin-left: 1%;
+}
+#test-question-screen{
+    display: inline-flex;
+    flex-direction: column;
+    text-align: left;
+}
+#test-options {
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 800 px;
+}
+#action-btn{
+    margin-left: auto;
+    margin-top: 15px;
+}
