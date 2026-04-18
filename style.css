@@ -46,6 +46,7 @@ body {
 .sidebar.active button:nth-child(2) {transition-delay: 0.2s;}
 .sidebar.active button:nth-child(3) {transition-delay: 0.3s;}
 .sidebar.active button:nth-child(4) {transition-delay: 0.4s;}
+.sidebar.active button:nth-child(5) {transition-delay: 0.5s;}
 .nav-link {
     gap: 10px;
     margin-top: 2px;
@@ -151,4 +152,37 @@ body {
     height: 5px;
     background-color: #5cb85c;
     transition: width 0.5s ease-in-out;
+}
+.test-option-btn.selected-highlight{
+    border: 3px solid #3498db;
+    background-color: #ebf5fb;
+}
+.test-option-btn{
+    border: 2px solid rgb(156, 156, 156);
+    background-color: #ebf5fb;
+    border-radius: 12px;
+}
+.correct-highlight {
+    border: 3px solid green !important;
+    background-color: #eafaf1 !important;
+}
+.wrong-highlight {
+    border: 3px solid red !important;
+    background-color: #fdedec !important;
+}
+.test-option-btn:disabled {
+    opacity: 1;
+    cursor: default;
+}
+.summary-item {
+    cursor: pointer;
+    padding: 10 px;
+    transition: background-color 0.2s;
+}
+.summary-item:hover {
+    background-color: #f0f0f0;
+}
+.options-locked {
+    pointer-events: none;
+    opacity: 0.8;
 }
